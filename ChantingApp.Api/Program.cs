@@ -26,8 +26,11 @@ builder.Services.AddDbContext<ChantsDbContext>(o =>
 builder.Services.AddTransient<IValidator<CreateChantViewModel>, CreateChantValidator>();
 builder.Services.AddScoped<ICurrentUserContext, CurrentUserContext>();
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
+app.UseSwagger().UseSwaggerUI();
 app.UseAuthentication()
    .UseRouting()
    .UseAuthorization()
