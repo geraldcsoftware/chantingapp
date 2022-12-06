@@ -1,0 +1,15 @@
+# IDE cache folders
+.vs
+.idea
+.vscode
+
+# Build output
+[Bb]in
+[Oo]bj
+[Dd]ebug
+[Rr]elease
+[Tt]est[Rr]esults
+
+# User settings
+*.user
+*.dotsettings
