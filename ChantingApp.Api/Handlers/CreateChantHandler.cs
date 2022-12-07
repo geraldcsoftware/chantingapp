@@ -44,6 +44,12 @@ public class CreateChantHandler : IRequestHandler<CreateChantViewModel, ChantVie
                 PresetType = visualPreset.PresetType,
                 Color = (visualPreset as SingleColourPreset)?.Color,
                 BackgroundImageUrl = (visualPreset as BackgroundImagePreset)?.ImageUrl
+            },
+            Stream = new ChantStream
+            {
+                Status = StreamStatus.Live,
+                StartTime = DateTimeOffset.UtcNow,
+                Url = request.Name
             }
         };
 

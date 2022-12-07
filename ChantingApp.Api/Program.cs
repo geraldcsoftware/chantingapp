@@ -1,5 +1,6 @@
 using System.Reflection;
 using ChantingApp.Api;
+using ChantingApp.Api.Hubs;
 using ChantingApp.Api.Services;
 using ChantingApp.Api.Validators;
 using ChantingApp.Api.ViewModels;
@@ -28,13 +29,19 @@ builder.Services.AddScoped<ICurrentUserContext, CurrentUserContext>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 app.UseSwagger().UseSwaggerUI();
 app.UseAuthentication()
    .UseRouting()
    .UseAuthorization()
-   .UseEndpoints(e => { e.MapControllers(); });
+   .UseEndpoints(e =>
+    {
+        e.MapControllers();
+        e.MapHub<ChantStreamHub>("/chant-hub");
+    });
 
 using (var scope = app.Services.CreateScope())
 {
