@@ -14,6 +14,7 @@ public class ChantVisualDisplay
 {
     public ChantVisualPresetType PresetType { get; set; }
     public Color? Color { get; set; }
+    public IReadOnlyCollection<Color>? Colors { get; set; }
     public string? BackgroundImageUrl { get; set; }
 }
 
@@ -37,4 +38,9 @@ public class BackgroundImagePreset : ChantVisualPreset
 public class SingleColourPreset : ChantVisualPreset
 {
     public required Color Color { get; set; }
+}
+
+public class MultiColorPreset : ChantVisualPreset
+{
+    public required IReadOnlyCollection<Color> Colors { get; set; }
 }

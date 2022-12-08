@@ -12,5 +12,6 @@ public class VisualPresetViewModel
 {
     public required string Type { get; set; }
     public string? Color { get; set; }
+    public IReadOnlyCollection<string>? Colors { get; set; }
     public string? ImageUrl { get; set; }
 }

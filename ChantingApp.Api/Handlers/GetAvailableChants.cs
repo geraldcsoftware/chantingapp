@@ -34,6 +34,7 @@ public class GetAvailableChantsHandler : IRequest<IReadOnlyCollection<ChantViewM
             VisualPreset = new VisualPresetViewModel
             {
                 Color = c.VisualPreset.Color?.ToString(),
+                Colors = c.VisualPreset.Colors?.Select(c=>c.ToString()).ToArray(),
                 ImageUrl = c.VisualPreset.BackgroundImageUrl,
                 Type = c.VisualPreset.PresetType.ToString()
             }

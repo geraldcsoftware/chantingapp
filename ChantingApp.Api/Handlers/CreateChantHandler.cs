@@ -29,8 +29,8 @@ public class CreateChantHandler : IRequestHandler<CreateChantViewModel, ChantVie
 
         var visualPreset = GetVisualPreset(request.VisualPreset);
         _logger.LogInformation("Chant visual preset: {@VisualPreset}", visualPreset);
-        
-        if (visualPreset == null) 
+
+        if (visualPreset == null)
             throw new Exception("Invalid visual preset details");
 
         var chant = new Chant
@@ -43,6 +43,7 @@ public class CreateChantHandler : IRequestHandler<CreateChantViewModel, ChantVie
             {
                 PresetType = visualPreset.PresetType,
                 Color = (visualPreset as SingleColourPreset)?.Color,
+                Colors = (visualPreset as MultiColorPreset)?.Colors,
                 BackgroundImageUrl = (visualPreset as BackgroundImagePreset)?.ImageUrl
             },
             Stream = new ChantStream
@@ -63,6 +64,7 @@ public class CreateChantHandler : IRequestHandler<CreateChantViewModel, ChantVie
             VisualPreset = new VisualPresetViewModel
             {
                 Color = chant.VisualPreset.Color?.ToString(),
+                Colors = (visualPreset as MultiColorPreset)?.Colors.Select(c=>c.ToString()).ToArray(),
                 ImageUrl = chant.VisualPreset.BackgroundImageUrl,
                 Type = chant.VisualPreset.PresetType.ToString()
             }
@@ -90,6 +92,15 @@ public class CreateChantHandler : IRequestHandler<CreateChantViewModel, ChantVie
         return null;
     }
 
+    private static ChantVisualPreset TryGetColorsPreset(JsonElement element)
+    {
+        var colors = element.EnumerateArray()
+                            .Select(e => Color.Parse(e.GetString()!, CultureInfo.InvariantCulture))
+                            .ToArray();
+
+        return new MultiColorPreset { Colors = colors };
+    }
+
     private static ChantVisualPreset? TryGetPresetFromJsonObject(JsonElement element)
     {
         ArgumentNullException.ThrowIfNull(element);
@@ -97,6 +108,12 @@ public class CreateChantHandler : IRequestHandler<CreateChantViewModel, ChantVie
 
         if (element.TryGetProperty("color", out var colorProperty))
             return TryGetColorPreset(colorProperty.GetString()!);
+
+        if (element.TryGetProperty("colors", out var colorsProperty))
+        {
+            return TryGetColorsPreset(colorsProperty);
+        }
+
         if (element.TryGetProperty("imageUrl", out var imageProperty))
         {
             var imageUrl = imageProperty.GetString();

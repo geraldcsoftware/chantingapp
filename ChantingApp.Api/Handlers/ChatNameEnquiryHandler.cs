@@ -32,6 +32,7 @@ public class ChatNameEnquiryHandler : IRequestHandler<ChatNameEnquiryRequest, Ch
                        VisualPreset = new VisualPresetViewModel
                        {
                            Color = chant.VisualPreset.Color?.ToString(),
+                           Colors = chant.VisualPreset.Colors?.Select(c => c.ToString()).ToArray(),
                            ImageUrl = chant.VisualPreset.BackgroundImageUrl,
                            Type = chant.VisualPreset.PresetType.ToString()
                        }
