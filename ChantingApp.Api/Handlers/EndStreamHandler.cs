@@ -33,9 +33,10 @@ public class EndStreamHandler : IRequestHandler<EndStreamViewModel, Unit>
             _logger.LogInformation("Chant `{Id}` not found", request.Id);
             return Unit.Value;
         }
+
         await _streamHub.Clients.All.SendAsync("StreamEnded", name, cancellationToken: cancellationToken);
         await _dbContext.Streams
-                        .Where(s => s.ChantId == request.Id)
+                        .Where(s => s.ChantId == request.Id && s.Status == StreamStatus.Live)
                         .ExecuteUpdateAsync(update => update.SetProperty(s => s.EndTime, DateTimeOffset.UtcNow)
                                                             .SetProperty(s => s.Status, StreamStatus.Ended),
                                             cancellationToken: cancellationToken);
