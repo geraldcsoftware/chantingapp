@@ -9,6 +9,8 @@
 [Dd]ebug
 [Rr]elease
 [Tt]est[Rr]esults
+[Pp]ublish[Pp]rofiles
+[Ss]ervice[Dd]ependencies
 
 # User settings
 *.user
