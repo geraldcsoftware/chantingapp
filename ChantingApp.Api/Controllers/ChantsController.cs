@@ -28,7 +28,7 @@ public class ChantsController : ControllerBase
         await _mediator.Send(new EndStreamViewModel(id), ct);
         return NoContent();
     }
-    
+
 
     [HttpGet]
     public async Task<IEnumerable<ChantViewModel>> GetAvailableChants(CancellationToken ct)
@@ -38,13 +38,13 @@ public class ChantsController : ControllerBase
     }
 
     [HttpGet("check-name")]
-    public async Task<ActionResult<ChantViewModel>> CheckNameAvailability([FromQuery] ChatNameEnquiryRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<ChantNameEnquiryResultViewModel>> CheckNameAvailability([FromQuery] ChatNameEnquiryRequest request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(request, cancellationToken);
         return result switch
         {
-            null => NoContent(),
-            _    => Ok(result)
+            null => new ChantNameEnquiryResultViewModel { IsNameTaken = false },
+            _    => new ChantNameEnquiryResultViewModel { IsNameTaken = true, ExistingChant = result }
         };
     }
 }
