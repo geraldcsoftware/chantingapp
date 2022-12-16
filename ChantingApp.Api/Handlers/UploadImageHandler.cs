@@ -1,12 +1,13 @@
 ﻿using Azure.Identity;
 using Azure.Storage.Blobs;
+using ChantingApp.Api.ViewModels;
 using MediatR;
 
 namespace ChantingApp.Api.Handlers;
 
-public record UploadFileRequest(IFormFile File) : IRequest<string>;
+public record UploadFileRequest(IFormFile File) : IRequest<UploadResultViewModel>;
 
-public class UploadImageHandler : IRequestHandler<UploadFileRequest, string>
+public class UploadImageHandler : IRequestHandler<UploadFileRequest, UploadResultViewModel>
 {
     private readonly IConfiguration _configuration;
     private readonly ILogger<UploadImageHandler> _logger;
@@ -18,12 +19,12 @@ public class UploadImageHandler : IRequestHandler<UploadFileRequest, string>
         _logger = logger;
     }
 
-    public async Task<string> Handle(UploadFileRequest request, CancellationToken cancellationToken)
+    public async Task<UploadResultViewModel> Handle(UploadFileRequest request, CancellationToken cancellationToken)
     {
         return await UploadFile(request.File);
     }
 
-    private async Task<string> UploadFile(IFormFile file)
+    private async Task<UploadResultViewModel> UploadFile(IFormFile file)
     {
         var connectionString = _configuration.GetConnectionString("AzureStorageAccount");
         var blobServiceClient = new BlobServiceClient(connectionString);
@@ -35,8 +36,10 @@ public class UploadImageHandler : IRequestHandler<UploadFileRequest, string>
         await using var stream = file.OpenReadStream();
         await blobClient.UploadAsync(stream);
         var fileUrl = blobClient.Uri.AbsoluteUri;
-        return fileUrl;
+        return new UploadResultViewModel
+        {
+            Succeeded = true,
+            FileUrl = fileUrl
+        };
     }
-
-    
 }

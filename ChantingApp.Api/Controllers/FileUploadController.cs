@@ -1,4 +1,5 @@
 ﻿using ChantingApp.Api.Handlers;
+using ChantingApp.Api.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +16,9 @@ public class FileUploadController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<string>> UploadFile(IFormFile file)
+    public async Task<ActionResult<UploadResultViewModel>> UploadFile(IFormFile file)
     {
-        var url = await _mediator.Send(new UploadFileRequest(file));
-        return url;
+        var result = await _mediator.Send(new UploadFileRequest(file));
+        return result;
     }
 }
